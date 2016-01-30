@@ -22,6 +22,16 @@ func configPushRoutes() {
 			return
 		}
 
+        hostname, herr := g.Hostname()
+        if herr != nil {
+            http.Error(w, "can not get hostname",http.StatusBadRequest)
+            return    
+        }
+        
+        for i,_:= range(metrics) {
+            metrics[i].Endpoint = hostname
+        }
+
 		g.SendToTransfer(metrics)
 		w.Write([]byte("success"))
 	})
